@@ -1,9 +1,9 @@
 #!/bin/sh
-if [ -f *.chow ]
+if [ -f english.chow ]
 then
 	rm -rf *.chow
 	echo "chow files deleted"
-fi
+fi 
 
 if [ "$1" == "0" ]
 then

@@ -12,6 +12,7 @@ class Node:
 	tag = None
 	
 	def add(self, new_data, tag):
+		#print(new_data, tag, self.data)
 		global table, marker
 		index = -1
 		if new_data[0] != self.data[0]:
@@ -20,15 +21,16 @@ class Node:
 				return sibling_object.add(new_data,tag)
 			else:
 				self.sibling = marker
+				if marker == None:
+					print(self.data)
 				sibling_object = Node()
 				sibling_object.data = new_data
 				table[marker] = sibling_object
 				marker += 1
 				sibling_object.tag = tag
-				try:
-					return tag+1
-				except:
+				if tag == None:
 					return None
+				return tag+1
 		for i in range(min(len(self.data), len(new_data))):
 			if self.data[i] != new_data[i]:
 				index = i
@@ -39,18 +41,20 @@ class Node:
 			self.data = self.data[:index]
 			self_tag = self.tag
 			self.tag = None
-			if self.child != None:
-				child_object = table[self.child]
-				child_object.add(data1,self_tag)
-				return child_object.add(data2,tag)
-			else:
-				self.child = marker
-				child_object = Node()
-				child_object.data = data1
-				child_object.tag = self_tag
-				table[self.child] = child_object
-				marker += 1
-				return child_object.add(data2,tag)
+			old_child = Node()
+			old_child.data = data1
+			old_child.tag = self_tag
+			old_child.child = self.child
+			self.child = marker
+			table[marker] = old_child
+			marker += 1
+			new_child = Node()
+			new_child.data = data2
+			new_child.tag = tag
+			old_child.sibling = marker
+			table[marker] = new_child
+			marker += 1
+			return tag+1
 		else:
 			if len(self.data) < len(new_data):
 				new_data = new_data[len(self.data):]
@@ -59,21 +63,21 @@ class Node:
 					return child_object.add(new_data,tag)
 				else:
 					self.child = marker
+					if marker == None:
+						print(self.data)
 					child_object = Node()
 					child_object.data = new_data
 					child_object.tag = tag
 					table[marker] = child_object
 					marker += 1
-					try:
-						return tag+1
-					except:
+					if tag == None:
 						return None
+					return tag+1
 			else:
 				self.tag = tag
-				try:
-					return tag+1
-				except:
+				if tag == None:
 					return None
+				return tag+1
 
 class Dictionary:
 	root = None
@@ -108,13 +112,12 @@ class Dictionary:
 			sylabs = current.data
 			sys.stdout.write(sylabs)
 			i = len(sylabs)
-			#print(word[:i])
 			if word[:i] == sylabs:
 				word = word[i:]
 				if word != '':
 					print()
 					current = table[current.child]
-				else:
+				else:					
 					return current.tag
 			else:
 				sys.stdout.write('->')
