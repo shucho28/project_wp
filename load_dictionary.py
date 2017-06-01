@@ -8,7 +8,7 @@ for line in source:
 	count += 1
 	line = line.strip()
 	English.addWord(line)
-	print(line, count)
+	#print(line, count)
 
 english = open('english.chow','wb')
 english_struct = open('english_struct.chow','wb')
